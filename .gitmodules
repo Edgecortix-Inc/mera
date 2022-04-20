@@ -1,0 +1,6 @@
+[submodule "mera-tvm"]
+	path = mera-tvm
+	url = git@github.com:Edgecortix-Inc/mera-tvm-public.git
+[submodule "mera-dna"]
+	path = mera-dna
+	url = git@github.com:Edgecortix-Inc/mera-dna-public.git
