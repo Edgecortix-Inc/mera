@@ -62,9 +62,9 @@ setup(
     python_requires='>=3.6',
     install_requires=_BASE_REQUIREMENTS,
     extras_require={
-        'host-only' : (['mera-tvm-host-only==1.0'] + _ML_REQUIREMENTS),
-        'full' : (['mera-tvm-full==1.0'] + _ML_REQUIREMENTS),
-        'runtime' : ['mera-tvm-runtime==1.0']
+        'host-only' : (['mera-tvm-host-only'] + _ML_REQUIREMENTS),
+        'full' : (['mera-tvm-full'] + _ML_REQUIREMENTS),
+        'runtime' : ['mera-tvm-runtime']
     },
     package_data={},
     data_files=[],

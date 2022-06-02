@@ -8,13 +8,16 @@ The current release of EdgeCortix&reg; MERA™ supports the following Dynamic Ne
 
 | Platform Identifiers | Platform | TOPS |
 |:---------------------:|:------:|:----:|
-|      DNAA600L0002     |  ASIC (SAKURA)  |  40  |
+|      DNAA800L0001     |  ASIC  |  78 <sub>1</sub>   |
+|      DNAA600L0002     |  ASIC  |  40  |
 |      DNAA400L0001     |  ASIC  | 26.2 |
 |      DNAF132S0001     |  FPGA  |  0.6 |
 |      DNAF232S0002     |  FPGA  |  1.2 |
 |      DNAF100L0003     |  FPGA  |  2.4 |
 |      DNAF632L0003     |  FPGA  |  3.6 |
 |      DNAF200L0003     |  FPGA  |  4.9 |
+
+*Note<sub>1</sub> Recommended frequency for this platform is 1.2GHz*
 
 When using a platform identifier corresponding to the ASIC platforms, the recommended minimum frequency setting is 800 MHz. In the case of FPGA platforms, the minimum recommended frequency is 300 MHz. In the above table, the TOPS corresponds to these minimum frequency specifications. 
 

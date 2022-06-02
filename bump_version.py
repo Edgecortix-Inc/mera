@@ -30,10 +30,17 @@ def get_version():
     else:
         raise RuntimeError("Unable to find version string in %s." % (ver_file,))
 
-def update_version(old_v, new_v):
+def update_version(new_v):
     ver_contents = ver_file.read_text()
-    ver_contents = ver_contents.replace(f'__version__ = "{old_v}"', f'__version__ = "{new_v}"', 1)
+    ver_contents = re.sub(r'__version__ = ".*"\n', f'__version__ = "{new_v}"\n', ver_contents, count=1)
     ver_file.write_text(ver_contents)
+
+    new_v_obj = Version(new_v)
+    doc_file = pathlib.Path(__file__).parent.resolve() / 'docs/conf.py'
+    doc_contents = doc_file.read_text()
+    doc_contents = re.sub(r'version = .*\n', f'version = \'{new_v_obj.major}.{new_v_obj.minor}\'\n', doc_contents, count=1)
+    doc_contents = re.sub(r'release = .*\n', f'release = \'{new_v}\'\n', doc_contents, count=1)
+    doc_file.write_text(doc_contents)
 
 def main():
     arg_p = argparse.ArgumentParser(description='Bump version for mera')
@@ -45,6 +52,7 @@ def main():
         help='Whether to take the values from command line to override the version completely')
     arg_p.add_argument('-v', '--version', required=False, action='store_true',
         help='Displays the current Mera version')
+    arg_p.add_argument('-r', '--raw_version', required=False, help='Override the version completely with this value')
 
     args = arg_p.parse_args()
 
@@ -55,27 +63,30 @@ def main():
     print(f'Current version {v}')
     _v = Version(v)
 
-    if not args.override:
-        major = args.major if args.major else _v.major
-        minor = args.minor if args.minor else _v.minor
-        if args.pre:
-            pre = args.pre
-        else:
-            pre = f"{_v.pre[0]}{_v.pre[1]}" if _v.pre else None
-        local = args.local if args.local else _v.local
+    if args.raw_version:
+        new_v = str(args.raw_version)
     else:
-        major, minor, pre, local = (args.major, args.minor, args.pre, args.local)
+        if not args.override:
+            major = args.major if args.major else _v.major
+            minor = args.minor if args.minor else _v.minor
+            if args.pre:
+                pre = args.pre
+            else:
+                pre = f"{_v.pre[0]}{_v.pre[1]}" if _v.pre else None
+            local = args.local if args.local else _v.local
+        else:
+            major, minor, pre, local = (args.major, args.minor, args.pre, args.local)
 
-    # Reassemble version
-    new_v = f'{major}.{minor}'
-    if pre:
-        new_v += f'.{pre}'
-    if local:
-        new_v += f'+{local}'
+        # Reassemble version
+        new_v = f'{major}.{minor}'
+        if pre:
+            new_v += f'.{pre}'
+        if local:
+            new_v += f'+{local}'
     print(f'New version = {new_v}')
 
     # Save version
-    update_version(v, new_v)
+    update_version(new_v)
     print('SUCCESS')
     return 0
 
