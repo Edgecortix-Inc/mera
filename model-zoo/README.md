@@ -57,7 +57,7 @@ Some remarks at this point. Please note that by default these models have been c
 
 ## Model list
 
-| Model               | Framework   | Application                 | Bath size | Input resolution | Precision | Calibration data | Link                                                                  |
+| Model               | Framework   | Application                 | Batch size | Input resolution | Precision | Calibration data | Link                                                                  |
 | ------------------- | ----------- | --------------------------- | :-------: | :--------------: | :-------: | :--------------: | --------------------------------------------------------------------- |
 | ResNet18-v1.5       | Pytorch     | Classification              |     1     |     224x224      |   int8    |    Real data     | [link](https://edgecortix.box.com/s/f5tdfd6bgvhhvmcgm79vezk1ldbu77nc) |
 | ResNet50-v1.5       | Pytorch     | Classification              |     1     |     224x224      |   int8    |    Real data     | [link](https://edgecortix.box.com/s/fhq3th1docshkdth66g5hlrqkb9z47x8) |
