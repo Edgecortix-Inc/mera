@@ -57,6 +57,8 @@ class MeraDeployProject(object):
 
     def __init__(self, root_path):
         self.root_path = root_path
+        self.log_dir = root_path / 'logs'
+        self.log_dir.mkdir(exist_ok=True)
         self.cwd_stack = [self.root_path]
         self.mdp_prj_file = root_path / MeraDeployProject._MDP_INFO_PATH
         self.__load_mdp_file(self.root_path, self.mdp_prj_file)
@@ -150,6 +152,9 @@ class MeraDeployProject(object):
 
     def get_cwd(self):
         return self.cwd_stack[-1]
+
+    def get_log_dir(self):
+        return str(self.log_dir)
 
 
 def is_mera_project(path : str) -> bool:

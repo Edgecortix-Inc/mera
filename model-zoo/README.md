@@ -48,7 +48,7 @@ Next we can start compiling and running models. The second script provided is na
 Now we are ready to launch the performance estimator script for all the models found in the specified directory. To specify the directory as an command line argument we use the flag `--modeldir` :
 
 ```bash
-$ source performance_estimator.py --modeldir models/
+$ python performance_estimator.py --models models/
 ...
 Models compiled and executed. Results have been saved to the file: latencies.txt
 ```
@@ -57,7 +57,7 @@ Some remarks at this point. Please note that by default these models have been c
 
 ## Model list
 
-| Model               | Framework   | Application                 | Bath size | Input resolution | Precision | Calibration data | Link                                                                  |
+| Model               | Framework   | Application                 | Batch size | Input resolution | Precision | Calibration data | Link                                                                  |
 | ------------------- | ----------- | --------------------------- | :-------: | :--------------: | :-------: | :--------------: | --------------------------------------------------------------------- |
 | ResNet18-v1.5       | Pytorch     | Classification              |     1     |     224x224      |   int8    |    Real data     | [link](https://edgecortix.box.com/s/f5tdfd6bgvhhvmcgm79vezk1ldbu77nc) |
 | ResNet50-v1.5       | Pytorch     | Classification              |     1     |     224x224      |   int8    |    Real data     | [link](https://edgecortix.box.com/s/fhq3th1docshkdth66g5hlrqkb9z47x8) |
@@ -74,3 +74,15 @@ Some remarks at this point. Please note that by default these models have been c
 | EfficientNetV2 b2   | TFLite      | Classification              |     1     |     224x224      |   int8    |   Random data    | [link](https://edgecortix.box.com/s/75hgakm13i3kdezau3nqjke6mal46atp) |
 | EfficientNetV2 b3   | TFLite      | Classification              |     1     |     224x224      |   int8    |   Random data    | [link](https://edgecortix.box.com/s/av9kgmnp4n0pl9tmi1qd0z2743ujc19i) |
 | EfficientNetV2 s    | TFLite      | Classification              |     1     |     224x224      |   int8    |   Random data    | [link](https://edgecortix.box.com/s/ox54kf0pta2g1f39q7452so4fc35syy4) |
+| MonoDepth           | PyTorch     | Monocular depth estimation  |     1     |     384x288      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/uv0vvqkyp3rx7v1lgapv6yufrcurastd) |
+| U-Net               | TFLite      | Semantic segmentation       |     1     |     128x128      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/2y4d405sqpmrhsvg0mrefznj7tj1nrve) |
+| MoveNet Thunder     | TFLite      | Pose estimation             |     1     |     256x256      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/kh0mghv2yd88mstucql1tsq6t0jn2w18) |
+| YoloV4 Tiny         | TFLite      | 2D Object detection         |     1     |     640x640      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/1wokg6m238hesq0w4uat07nhewasmn21) |
+| YoloV4 Tiny         | TFLite      | 2D Object detection         |     1     |     640x640      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/1wokg6m238hesq0w4uat07nhewasmn21) |
+| DeepLabEdgeTPU m    | TFLite      | Semantic segmentation       |     1     |     512x512      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/28dcbrtby7whzpvcmoldgqyfjs2d4slj) |
+| DeepLabEdgeTPU s    | TFLite      | Semantic segmentation       |     1     |     512x512      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/57jrlqgsxy68w3i5gvh2m0qn7lay8f3o) |
+| MoveNet Lighting    | TFLite      | Pose estimation             |     1     |     192x192      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/oj2g7rwpk3n0t2fphfx65p96i4l4ip7e) |
+| MobileNetV2 SSD     | PyTorch     | 2D Object detection         |     1     |     640x480      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/jcifbv6tkrcinqczoalsemel4nm9fk6w) |
+| DeepLabEdgeTPU xs   | TFLite      | Semantic segmentation       |     1     |     512x512      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/150wnhkxvdaja9fbr93v76x1jomtrhs4) |
+| GladNet             | TFLite      | Low light enhancement       |     1     |     640x480      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/hg6zh4bu8a1cp701zc16ro410yi69lkl) |
+| ABPN                | TFLite      | Super resolution            |     1     |     640x360      |   int8    |   Real data      | [link](https://edgecortix.box.com/s/x9hxsd5030u3slbnj847q9kgudk6bx6m) |

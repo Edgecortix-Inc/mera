@@ -81,14 +81,24 @@ class MeraTvmDeployment:
         self.params_path = params_path
         self.lib_json_path = lib_json_path
 
-    def get_runner(self) -> MeraTvmModelRunner:
+    def get_runner(self, tvm_debug_mode : bool = False, tvm_debug_dump_path : str = None) -> MeraTvmModelRunner:
         """Prepares the model for running with a given target
+
+        :param tvm_debug_mode: Whether to create this runner with TVM debugger mode or not. This mode allows a breakdown of
+            time spent on each node.
+        :param tvm_debug_dump_path: When running with TVM debug mode enabled, allows to set up a directory where the debugging
+            results will be kept, otherwise they will be sent to a temporary directory.
 
         :return: Runner object
         """
         from tvm.runtime import load_module as __load_module, cpu as __cpu
-        from tvm.contrib.graph_executor import create as __create
-        rt_mod = __create(self.lib_json_path.read_text(), __load_module(self.lib_path), __cpu())
+        if tvm_debug_mode:
+            from tvm.contrib.debugger.debug_executor import create as __create
+            logger.info(f'Creating TVM model runner in debugger mode')
+            rt_mod = __create(self.lib_json_path.read_text(), __load_module(self.lib_path), __cpu(), tvm_debug_dump_path)
+        else:
+            from tvm.contrib.graph_executor import create as __create
+            rt_mod = __create(self.lib_json_path.read_text(), __load_module(self.lib_path), __cpu())
         rt_mod.load_params(self.params_path.read_bytes())
         logger.info(f'Created TVM model runner')
         return MeraTvmModelRunner(rt_mod)

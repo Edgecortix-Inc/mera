@@ -112,8 +112,7 @@ class TVMDeployer(_DeployerBase):
         self.prj.pushd(target_str)
 
         # Setup mera logging
-        os.environ["GLOG_log_dir"] = str(self.prj.get_cwd())
-        os.environ["GLOG_logtostderr"] = "false"
+        os.environ["GLOG_log_dir"] = self.prj.get_log_dir()
 
         # Save compile input artifacts
         self.prj.save_artifact('build_config.yaml', ArtifactFileType.YAML, target_str, build_config)

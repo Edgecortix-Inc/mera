@@ -46,6 +46,7 @@ def main():
     arg_p = argparse.ArgumentParser(description='Bump version for mera')
     arg_p.add_argument('-M', '--major', required=False, help='Update major version')
     arg_p.add_argument('-m', '--minor', required=False, help='Update to minor version')
+    arg_p.add_argument('-i', '--micro', required=False, help='Update to micro version')
     arg_p.add_argument('-p', '--pre', required=False, help='Pre-release tag to apply')
     arg_p.add_argument('-l', '--local', required=False, help='Update local version')
     arg_p.add_argument('-o', '--override', required=False, action='store_true',
@@ -69,16 +70,17 @@ def main():
         if not args.override:
             major = args.major if args.major else _v.major
             minor = args.minor if args.minor else _v.minor
+            micro = args.micro if args.micro else _v.micro
             if args.pre:
                 pre = args.pre
             else:
                 pre = f"{_v.pre[0]}{_v.pre[1]}" if _v.pre else None
             local = args.local if args.local else _v.local
         else:
-            major, minor, pre, local = (args.major, args.minor, args.pre, args.local)
+            major, minor, pre, micro, local = (args.major, args.minor, args.pre, args.micro, args.local)
 
         # Reassemble version
-        new_v = f'{major}.{minor}'
+        new_v = f'{major}.{minor}.{micro}'
         if pre:
             new_v += f'.{pre}'
         if local:

@@ -31,8 +31,8 @@ def get_version():
     else:
         raise RuntimeError("Unable to find version string in %s." % (ver_file,))
 
-_BASE_REQUIREMENTS = ['onednn-cpu-gomp==2022.0.2', 'PyYAML', 'pytest']
-_ML_REQUIREMENTS = ['tensorflow<=2.6.2', 'tflite==2.4.0', 'torch==1.7.1']
+_BASE_REQUIREMENTS = ['PyYAML', 'pytest']
+_ML_REQUIREMENTS = ['onednn-cpu-gomp==2022.0.2', 'tensorflow<=2.6.2', 'tflite==2.4.0', 'torch==1.7.1']
 
 # If we are packaging for an ARM platform, we need to specify different dependency packages
 _IS_ARM = any([bool(re.match(r"--plat-name=.*_aarch64", a)) for a in sys.argv])
@@ -66,6 +66,7 @@ setup(
         'full' : (['mera-tvm-full'] + _ML_REQUIREMENTS),
         'runtime' : ['mera-tvm-runtime']
     },
+    scripts=['bin/mera'],
     package_data={},
     data_files=[],
     entry_points={},
