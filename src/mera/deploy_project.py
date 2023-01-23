@@ -38,6 +38,7 @@ class ArtifactFileType(Enum):
 class Target(Enum):
     """List of possible Mera Target values."""
     IP = ("IP", False)                                #: Target HW accelerator. Valid for `arm` and `x86` architectures.
+    Interpreter = ("Interpreter", True)               #: Target sw interpretation of the model in floating point. Only valid for `x86`
     InterpreterHw = ("InterpreterHw", True)           #: Target sw interpretation of the model. Only valid for `x86`
     Simulator = ("Simulator", True)                   #: Target sw simulation of the IP model. Only valid for `x86`
     VerilatorSimulator = ("VerilatorSimulator", True) #: Target hw emulation of the IP model. Only valid for `x86`
@@ -48,6 +49,12 @@ class Target(Enum):
 
     def __str__(self):
         return self.str_val
+
+
+class Layout(Enum):
+    """List of possible data layouts"""
+    NCHW = 'NCHW' #: N batches, Channels, Height, Width.
+    NHWC = 'NHWC' #: N batches, Height, Width, Channels.
 
 
 class MeraDeployProject(object):

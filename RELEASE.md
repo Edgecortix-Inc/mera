@@ -1,3 +1,28 @@
+# Highlights for MERA 1.3.0
+
+## Major features and improvements
+
+### Forward compatibility
+* Official support for Ubuntu 20.04 LTS as well as Python 3.8. Compatibility with Ubuntu 18.04 LTS and Python 3.6 still provided.
+* Newer versions of PyTorch and TensorFlow are now supported: PyTorch 1.12.1 and TensorFlow 2.9.0.
+
+### MERA custom quantizer
+* Featuring a built-in MERA custom quantizer premium (paid) feature. It allows users to feed MERA with FP32 models directly and apply quantization to it. This feature is disabled by default. MERA 1.3.0 still allows the deployment of pre-quantized models provided in the .mera format (see list in the Model Zoo).
+
+### Multi-model support
+* Support for multi-model deployments which allows the user to deploy more than one network at the same time. This can improve hardware utilization by running several models in parallel. Options to share the model inputs across multiple models is also available.
+
+### Model Zoo update
+* Model zoo update with new models and new .mera quantized sample models
+  * SCI - Low light enhancement https://github.com/vis-opt-group/SCI
+  * YoloV7 - https://github.com/WongKinYiu/yolov7
+  * TinyYoloV7 - https://github.com/WongKinYiu/yolov7
+  * YoloV4 - https://github.com/hunglc007/tensorflow-yolov4-tflite
+
+### Profiling modifications
+* Faster inference speeds on InterpreterHw and Interpreter target. Added feature for limiting the number of batches compiled at once for a MERA deployment. This is useful in cases where a model has very high batch dimension which could lead to the dramatic increase in number of instructions without corresponding gain in utilization.
+* Improved inference latency in API for Xilinx devices. Now MERA interacts directly with a layer below of the OpenCL API. By reducing the number of layers between hardware and software the MERA Runtime improves latency.
+
 # Highlights for MERA 1.2.0
 
 ## Major features and improvements
@@ -11,10 +36,3 @@
   * Semantic segmentation
   * Pose estimation
   * Low light enhancement
-* Improved or initial support of new operators
-  * Grouped 2D convolutions
-  * Scaling nearest operator
-  * Concatenate operator
-  * Mean operator
-  * Dense operators
-  * Average pooling operator

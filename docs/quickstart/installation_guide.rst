@@ -6,11 +6,11 @@ This document describes the steps needed to install Mera in your system.
 System Requirements
 -------------------
 
-For a *x86* architecture you will need to have `Ubuntu 18.04` as your OS whereas for *aarch64* you will need `Ubuntu 20.04`.
+For a *x86* architecture you will need to have `Ubuntu 18.04` or `Ubuntu 20.04` as your OS whereas for *aarch64* you will need `Ubuntu 20.04`.
 The following software packages will also need to be installed:
 
 * LLVM-10
-* python3.6
+* python3.6 or python3.8
 * pip >= 21.3.1
 
 Mera Installation

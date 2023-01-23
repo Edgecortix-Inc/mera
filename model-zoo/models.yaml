@@ -78,3 +78,12 @@ list:
   - model:
     name: 'ABPN_640x360_TF.tflite'
     code: x9hxsd5030u3slbnj847q9kgudk6bx6m
+  - model:
+    name: 'Yolov7_640x640_MERA.mera'
+    code: 13fx4hc0pkmokhppa6ats6eya15ad8a9
+  - model:
+    name: 'YoloV4_416x416_TF.tflite'
+    code: bnqxgw7vm5tu2651z8mleszodlbdh3xi
+  - model:
+    name: 'SCI_1280x720_MERA.mera'
+    code: pv92y5rf33en6qrm2zb727l5kc7ip598

@@ -35,6 +35,17 @@ def mera_run_sim_pytorch(pt_filename, input_data, platform, target, build_config
         return ip_runner
 
 
+def mera_run_sim_mera(mera_filename, platform, target, build_config, host_arch, output_dir):
+    with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
+        model = mera.ModelLoader(deployer).from_quantized_mera(mera_filename)
+        input_size, _ = model.input_desc[0][1]
+        input_data = np.random.rand(*input_size)
+
+        deploy_ip = deployer.deploy(model, mera_platform=platform, target=target, build_config=build_config, host_arch=host_arch)
+        ip_runner = deploy_ip.get_runner().set_input(input_data).run()
+        return ip_runner
+
+
 def dir_path(string):
     if os.path.isdir(string):
         return string
@@ -69,6 +80,9 @@ if __name__ == '__main__':
                 basename, extension = os.path.splitext(entry.name)
                 if extension == ".tflite":
                     runner = mera_run_sim_tflite(entry.path, platform, target, build_config, host_arch, basename)
+                    latencies[basename] = get_total_latency_ms(runner, 'sim_time_us')
+                elif extension == ".mera":
+                    runner = mera_run_sim_mera(entry.path, platform, target, build_config, host_arch, basename)
                     latencies[basename] = get_total_latency_ms(runner, 'sim_time_us')
                 elif extension == ".pt":
                     components = basename.split("_")

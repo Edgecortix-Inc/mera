@@ -15,7 +15,7 @@
 
 import numpy as np
 
-from typing import Dict, List
+from typing import Dict, List, Union
 from pathlib import Path
 from .deploy_project import is_mera_project, _create_mera_project, Target, logger
 
@@ -24,20 +24,22 @@ class MeraTvmModelRunner:
     def __init__(self, rt_mod):
         self.rt_mod = rt_mod
 
-    def set_input(self, data : np.ndarray):
+    def set_input(self, data : Union[np.ndarray, Dict[str, np.ndarray], List[np.ndarray]]):
         """Sets the input data for running
 
         :param data: Input numpy data tensor or dict of input numpy data tensors if the model has more than one input.
             Setting multiple inputs should have the format `{input_name : input_data}`
         """
-        if not isinstance(data, dict):
+        if isinstance(data, list):
+            d_ = data
+        elif not isinstance(data, dict):
             d_ = [data]
         else:
-            d_ = [None] * self.rt_mod.get_num_inputs()
+            d_ = [None] * len(data)
             for k, d in data.items():
                 d_[self.rt_mod.get_input_index(k)] = d
         [self.rt_mod.set_input(i, d) for i, d in enumerate(d_)]
-        logger.info(f'Set {len(d_)} input data variables')
+        logger.debug(f'Set {len(d_)} input data variables')
         return self
 
     def run(self) -> None:

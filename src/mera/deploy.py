@@ -72,13 +72,11 @@ class TVMDeployer(_DeployerBase):
             raise ValueError(f'Model is not of MeraModel type.')
 
         if isinstance(target, str):
-            target_str = target
-            x86_only = True
-        elif isinstance(target, Target):
-            target_str = target.str_val
-            x86_only = target.x86_only
-        else:
-            raise ValueError(f'target parameter {target} could not be insterpreted as a valid Target')
+            target = Target[target]
+        elif not isinstance(target, Target):
+            raise ValueError(f'target parameter {target} could not be interpreted as a valid Target')
+        target_str = target.str_val
+        x86_only = target.x86_only
 
         if isinstance(mera_platform, Platform):
             arch_val = mera_platform.value
@@ -124,8 +122,11 @@ class TVMDeployer(_DeployerBase):
             logger.info(f'Compiling Mera model...')
             self.prj.pushd('result')
             tm_start = time.time()
-            _mera.build(mod, params, output_dir=self.prj.get_cwd(),
-                host_arch=host_arch, layout='NHWC', aux_config=model._get_mera_aux_config())
+            if target_str == Target.Interpreter.str_val:
+                _mera.build_fp32(mod, params, target_str, host_arch=host_arch, output_dir=self.prj.get_cwd())
+            else:
+                _mera.build(mod, params, output_dir=self.prj.get_cwd(),
+                    host_arch=host_arch, layout='NHWC', aux_config=model._get_mera_aux_config())
             tm_end = time.time()
             to_target_artifact = lambda a : (target_str, self.prj.get_cwd() / a)
             self.prj.add_artifact([to_target_artifact(x) for x in ['deploy.so', 'deploy.json', 'deploy.params']])

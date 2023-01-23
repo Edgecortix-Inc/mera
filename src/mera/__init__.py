@@ -21,6 +21,10 @@ from .mera_model import ModelLoader
 
 from .mera_deployment import load_mera_deployment, MeraTvmDeployment, MeraTvmPrjDeployment, MeraTvmModelRunner
 
-from .deploy_project import Target
+from .deploy_project import Target, Layout
 
 from .mera_platform import Platform
+
+from .mera_quantizer import ModelQuantizer
+
+from .quantization_quality import QuantizationQualityMetrics, calculate_quantization_quality

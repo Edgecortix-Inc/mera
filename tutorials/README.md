@@ -45,3 +45,13 @@ cd tutorials/tflite
 # Needs to enable RUN_IP env in order to actually run the tutorial in HW
 RUN_IP=1 python3 efficientnet_ip.py
 ```
+
+- **Fused PyTorch Resnet18 + MobilenetV2 on Simulator** (`multi_models/fused_resnet_mobilenet_simulator.py`):
+
+Contains an example on how to fuse two quantized PyTorch models (i.e., `resnet18` and `mobilenet_v2`) and then deploy the fused model in x86 host simulation.
+Can be executed with the following command:
+
+```
+cd tutorials/multi_models
+python3 fused_resnet_mobilenet_simulator.py
+```
