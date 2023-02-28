@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 
-project(mera VERSION 1.3.0)
+project(mera VERSION 1.3.1)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(MERA_TVM_ROOT "../mera-tvm")
@@ -12,7 +12,7 @@ endif()
 file(GLOB SRC src/*.cc)
 
 add_library(meratvm SHARED IMPORTED)
-set_property(TARGET meratvm PROPERTY IMPORTED_LOCATION $ENV{TVM_LIBRARY_PATH}/libmeratvm.so)
+set_property(TARGET meratvm PROPERTY IMPORTED_LOCATION $ENV{TVM_LIBRARY_PATH}/libmeratvm_runtime.so)
 
 add_library(mera SHARED ${SRC})
 target_include_directories(mera PUBLIC include)

@@ -17,9 +17,9 @@ def get_total_latency_ms(run_result, latency_key_name = 'elapsed_latency'):
 def mera_run_sim_tflite(tflite_filename, platform, target, build_config, host_arch, output_dir):
     with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
         model = mera.ModelLoader(deployer).from_tflite(tflite_filename)
-        input_size, _ = list(model.input_desc.values())[0]
-        input_data = np.random.rand(*input_size)
-
+        input_data = {}
+        for name, idesc in model.input_desc.all_inputs.items():
+            input_data[name] = np.random.rand(*idesc.input_shape)
         deploy_ip = deployer.deploy(model, mera_platform=platform, target=target, build_config=build_config, host_arch=host_arch)
         ip_runner = deploy_ip.get_runner().set_input(input_data).run()
         return ip_runner
@@ -38,9 +38,9 @@ def mera_run_sim_pytorch(pt_filename, input_data, platform, target, build_config
 def mera_run_sim_mera(mera_filename, platform, target, build_config, host_arch, output_dir):
     with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
         model = mera.ModelLoader(deployer).from_quantized_mera(mera_filename)
-        input_size, _ = model.input_desc[0][1]
-        input_data = np.random.rand(*input_size)
-
+        input_data = {}
+        for name, idesc in model.input_desc.all_inputs.items():
+            input_data[name] = np.random.rand(*idesc.input_shape)
         deploy_ip = deployer.deploy(model, mera_platform=platform, target=target, build_config=build_config, host_arch=host_arch)
         ip_runner = deploy_ip.get_runner().set_input(input_data).run()
         return ip_runner

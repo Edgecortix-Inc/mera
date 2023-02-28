@@ -3,15 +3,33 @@
 import argparse
 import mera
 import sys
+import subprocess
+import os
+
+from pathlib import Path
+
+def cmd(command, cwd):
+    with subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd) as p:
+        for line in p.stdout:
+            print(line.decode('utf-8'), end='')
+    return p.returncode
+
+def find_bin_util(name):
+    __mera_loc__ = Path(mera.__file__).resolve().parent
+    return str(__mera_loc__ / 'bin_utils' / name)
 
 def main():
     arg_p = argparse.ArgumentParser(description='Utility to query information about MERA platform')
     arg_p.add_argument('-v', '--version', action='store_true', help='Display the current version about the installed MERA')
+    arg_p.add_argument('--intel_get_board_id', nargs='?', required=False, const='',
+        help='On intel boards prints the current board id. Optionally provide the BDF location as argument')
 
     args = arg_p.parse_args()
     if args.version:
         print(mera.get_versions())
         return 0
+    elif args.intel_get_board_id is not None:
+        return cmd(f'{find_bin_util("intel_get_board_id")} {args.intel_get_board_id}', os.getcwd())
     arg_p.print_help()
     return 0
 

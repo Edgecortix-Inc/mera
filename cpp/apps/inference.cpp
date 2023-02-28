@@ -81,6 +81,7 @@ int main(int argc, char **argv) {
         break;
       case 't':
         target = mera::StrToTarget(std::string(optarg));
+        break;
       case '?':
       case 'h':
       default:

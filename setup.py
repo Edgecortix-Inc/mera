@@ -79,7 +79,9 @@ setup(
     install_requires=_BASE_REQUIREMENTS,
     extras_require=_EXTRAS,
     scripts=['bin/mera'],
-    package_data={},
+    package_data={
+        "mera" : ['bin_utils/intel_get_board_id']
+    },
     data_files=[],
     entry_points={},
     project_urls={

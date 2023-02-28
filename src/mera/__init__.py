@@ -17,7 +17,7 @@ from .version import __version__, get_versions, get_mera_version, get_mera_dna_v
 
 from .deploy import TVMDeployer
 
-from .mera_model import ModelLoader
+from .mera_model import ModelLoader, MeraModel
 
 from .mera_deployment import load_mera_deployment, MeraTvmDeployment, MeraTvmPrjDeployment, MeraTvmModelRunner
 
@@ -25,6 +25,12 @@ from .deploy_project import Target, Layout
 
 from .mera_platform import Platform
 
-from .mera_quantizer import ModelQuantizer
+try:
+    from .mera_quantizer import ModelQuantizer
+except ModuleNotFoundError:
+    pass
+
 
 from .quantization_quality import QuantizationQualityMetrics, calculate_quantization_quality
+
+from .model.input_desc import InputDescription, InputDescriptionContainer
