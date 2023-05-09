@@ -49,10 +49,22 @@ else: # x86
         'torchvision<=0.13.1'
     ]
     _EXTRAS = {
-        'host-only' : (['mera-tvm-host-only'] + _ML_REQUIREMENTS),
         'full' : (['mera-tvm-full'] + _ML_REQUIREMENTS),
         'runtime' : ['mera-tvm-runtime']
     }
+
+_BINARIES = [
+    'bin_utils/intel_get_board_id',
+    'bin_utils/ifc_uio_5.15.0-56-generic.ko',
+    'bin_utils/pcie_sakura_5.15.0-69-generic.ko',
+    'bin_utils/pcie_sakura_5.15.0-71-generic.ko',
+    'bin_utils/sakura_ddr_init',
+    'bin_utils/ec_dma_daemon_proc',
+]
+
+_CONSOLE_ENTRY_POINTS = [
+    'mera = mera.app.mera:main'
+]
 
 setup(
     name='mera',
@@ -78,12 +90,12 @@ setup(
     python_requires='>=3.6',
     install_requires=_BASE_REQUIREMENTS,
     extras_require=_EXTRAS,
-    scripts=['bin/mera'],
-    package_data={
-        "mera" : ['bin_utils/intel_get_board_id']
-    },
+    scripts=[],
+    package_data={"mera" : _BINARIES},
     data_files=[],
-    entry_points={},
+    entry_points={
+        'console_scripts' : _CONSOLE_ENTRY_POINTS
+    },
     project_urls={
         'Bug Tracker': 'https://github.com/Edgecortix-Inc/mera/issues',
         'Web Page': 'https://www.edgecortix.com',

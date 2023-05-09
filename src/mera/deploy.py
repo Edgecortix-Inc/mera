@@ -47,7 +47,7 @@ class _DeployerBase:
 
 
 class TVMDeployer(_DeployerBase):
-    """Using Mera deployer targetting the TVM compiler stack:"""
+    """Using MERA deployer targetting the TVM compiler stack:"""
 
     def _save_compile_metrics(self, compile_time):
         metrics = {}
@@ -58,15 +58,15 @@ class TVMDeployer(_DeployerBase):
 
     def deploy(self, model : MeraModel, mera_platform : Platform = Platform.DNAF200L0003, build_config = {},
         target : Target = Target.Simulator, host_arch : str = None) -> MeraTvmDeployment:
-        """Launches the compilation of a Mera project for a Mera model using the TVM stack.
+        """Launches the compilation of a MERA project for a MERA model using the TVM stack.
 
         :param model: Model object loaded from mera.ModelLoader
-        :param mera_platform: Mera platform architecture enum value
-        :param build_config: Mera build configuration dict
-        :param target: Mera build target
+        :param mera_platform: MERA platform architecture enum value
+        :param build_config: MERA build configuration dict
+        :param target: MERA build target
         :param host_arch: Host arch to deploy for. If unset, it will pick the current host platform, 
             provide a value to override the setting
-        :return: The object representing the result of a Mera deployment
+        :return: The object representing the result of a MERA deployment
         """
         if not isinstance(model, MeraModel):
             raise ValueError(f'Model is not of MeraModel type.')
@@ -122,7 +122,7 @@ class TVMDeployer(_DeployerBase):
             logger.info(f'Compiling Mera model...')
             self.prj.pushd('result')
             tm_start = time.time()
-            if target_str == Target.Interpreter.str_val:
+            if target.uses_fp32_flow:
                 _mera.build_fp32(mod, params, target_str, host_arch=host_arch, output_dir=self.prj.get_cwd())
             else:
                 _mera.build(mod, params, output_dir=self.prj.get_cwd(),

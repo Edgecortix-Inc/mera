@@ -62,7 +62,6 @@ sudo apt install libstdc++6
 
 The MERA environment provides 3 different modes depending on the target usage:
 
-* `host-only`: Meant for performing deployments only targetting simulation running on the host.
 * `runtime`: Meant for running inference in HW accelerators using the DNA IP, requires extra system dependencies depending on the HW device.
 * `full`: Meant for users who want the functionality of both `host-only` and `runtime` models
 
@@ -77,20 +76,20 @@ MERA_VENV=mera-env
 virtualenv -p python3.6 $MERA_VENV
 source $MERA_VENV/bin/activate
 
-# Install MERA host-only version
+# Install MERA full version
 pip install --upgrade pip
-pip install mera[host-only]
+pip install mera[full]
 
 # Install extra dependencies. These are needed to run our tutorials and demos
 pip install tqdm easydict wget notebook pandas matplotlib opencv-python gdown seaborn tensorflow_datasets
 
 
 # Test the installation
-$ python -c "mera --version"
+$ mera --version
 >>> Mera Environment Versions:
-      * mera version x.y released on dd/mm/yyyy
-      * mera-tvm version x.y
-      * mera-dna version vx.y+git=<hash>
+      * mera version x.y.z released on dd/mm/yyyy
+      * mera-tvm version x.y.z
+      * mera-dna version vx.y.z+git=<hash>
 ```
 
 `mera` provides packages for installing in both *x86* and *aarch64* architectures.
@@ -148,7 +147,7 @@ with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
         model,
         mera_platform=Platform.DNAA600L0002,
         target=Target.IP,
-        host_arch="x86)
+        host_arch="x86")
 
 #
 # Compilation options example for FPGA IP
@@ -159,7 +158,7 @@ with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
         model,
         mera_platform=Platform.DNAF200L0003,
         target=Target.IP,
-        host_arch="x86)
+        host_arch="x86")
 ```
 
 These examples assume some default compiler options, in particular, the Fast scheduling mode,
@@ -187,7 +186,7 @@ with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
         model,
         mera_platform=Platform.DNAA600L0002,
         target=Target.IP,
-        host_arch="x86,
+        host_arch="x86",
         build_config=build_config)  # new option
 ```
 
@@ -216,7 +215,7 @@ with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
         model,
         mera_platform=Platform.DNAF200L0003,
         target=Target.IP,
-        host_arch="x86)
+        host_arch="x86")
 
 #
 # Compile for FPGA IP C++ simulator
@@ -227,7 +226,7 @@ with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
         model,
         mera_platform=Platform.DNAF200L0003,
         target=Target.Simulator,
-        host_arch="x86)
+        host_arch="x86")
 ```
 
 In order to compile a model and do a cycle accurate simulation we should choose the following target:
@@ -242,7 +241,7 @@ with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
         model,
         mera_platform=Platform.DNAA600L0002,
         target=Target.VerilatorSimulator,
-        host_arch="x86)
+        host_arch="x86")
 ```
 
 Note that choosing this target is independent on the scheduler Slow or Fast modes, both can be used for this target but it is recommended to use the Slow (high effort) scheduling mode for the final compilation that will be used to benchmark a model.
@@ -266,7 +265,7 @@ with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
         model,
         mera_platform=Platform.DNAA600L0002,
         target=Target.VerilatorSimulator,
-        host_arch="x86,
+        host_arch="x86",
         build_config=build_config)
 ```
 

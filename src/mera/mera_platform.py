@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Mera platform selection"""
+"""MERA platform selection"""
 
 from enum import Enum
 
 
 class Platform(Enum):
-    """List of all valid Mera platforms"""
+    """List of all valid MERA platforms"""
     DNAF200L0001 = 'DNAF200L0001'
     DNAF200L0002 = 'DNAF200L0002'
     DNAF200L0003 = 'DNAF200L0003'
@@ -41,6 +41,7 @@ class Platform(Enum):
 
     DNAA600L0001 = 'DNAA600L0001'
     DNAA600L0002 = 'DNAA600L0002'
+    SAKURA_1     = 'DNAA600L0002'
 
 
     def __str__(self):

@@ -37,15 +37,17 @@ class ArtifactFileType(Enum):
 
 class Target(Enum):
     """List of possible Mera Target values."""
-    IP = ("IP", False)                                #: Target HW accelerator. Valid for `arm` and `x86` architectures.
-    Interpreter = ("Interpreter", True)               #: Target sw interpretation of the model in floating point. Only valid for `x86`
-    InterpreterHw = ("InterpreterHw", True)           #: Target sw interpretation of the model. Only valid for `x86`
-    Simulator = ("Simulator", True)                   #: Target sw simulation of the IP model. Only valid for `x86`
-    VerilatorSimulator = ("VerilatorSimulator", True) #: Target hw emulation of the IP model. Only valid for `x86`
+    IP = ("IP", False, False)                                #: Target HW accelerator. Valid for `arm` and `x86` architectures.
+    Interpreter = ("Interpreter", True, True)                #: Target sw interpretation of the model in floating point. Only valid for `x86`
+    InterpreterHw = ("InterpreterHw", True, False)           #: Target sw interpretation of the model. Only valid for `x86`
+    Simulator = ("Simulator", True, False)                   #: Target sw simulation of the IP model. Only valid for `x86`
+    VerilatorSimulator = ("VerilatorSimulator", True, False) #: Target hw emulation of the IP model. Only valid for `x86`
+    InterpreterHwBf16 = ("InterpreterHwBf16", True, True)    #: Target sw interpretation of the model in BF16. Only valid for `x86`
 
-    def __init__(self, str_val, x86_only):
+    def __init__(self, str_val, x86_only, uses_fp32_flow):
         self.str_val = str_val
         self.x86_only = x86_only
+        self.uses_fp32_flow = uses_fp32_flow
 
     def __str__(self):
         return self.str_val

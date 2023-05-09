@@ -34,3 +34,5 @@ except ModuleNotFoundError:
 from .quantization_quality import QuantizationQualityMetrics, calculate_quantization_quality
 
 from .model.input_desc import InputDescription, InputDescriptionContainer
+
+from .metrics.power_metrics import PowerMetrics

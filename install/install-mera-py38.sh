@@ -15,10 +15,10 @@ cat <<EOF >> ~/.bashrc
 source $MERA_VENV/bin/activate
 EOF
 
-# Install MERA host-only version (change to runtime or full for version capable of running on DNA IP machines)
+# Install MERA full version (change to runtime for a more light weight install with just IP run capabilities)
 pip install --upgrade pip
 pip install tqdm easydict wget notebook pandas matplotlib opencv-python gdown seaborn tensorflow_datasets
-pip install mera[host-only]
+pip install mera[full]
 
 # Test installation
-python -c "mera --version"
+mera --version

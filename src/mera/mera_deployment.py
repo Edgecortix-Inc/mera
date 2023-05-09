@@ -17,7 +17,9 @@ import numpy as np
 
 from typing import Dict, List, Union
 from pathlib import Path
+from enum import Enum
 from .deploy_project import is_mera_project, _create_mera_project, Target, logger
+from .metrics.power_metrics import PowerMetrics
 
 
 class MeraTvmModelRunner:
@@ -76,6 +78,32 @@ class MeraTvmModelRunner:
         """
         return self.rt_mod.get_runtime_metrics()
 
+    def get_power_metrics(self) -> PowerMetrics:
+        """Gets the power metrics reported from MERA after a :func:`run()`.
+        Note power measurement mode might need to be enable in order to collect and generate such metrics.
+
+        :return: Container with summary analysis of all collected metrics from MERA.
+        """
+        return PowerMetrics(self.rt_mod['get_power_metrics']())
+
+
+class DeviceTarget(Enum):
+    """List of possible MERA runtime devices for running IP deployments."""
+    SAKURA_1 = ("Sakura-1", 1)         #: Target device is an EdgeCortix's Sakura-1 ASIC.
+    XILINX_U50 = ("AMD Xilinx U50", 2) #: Target device is an AMD Xilinx U50 FPGA board.
+    INTEL_IA420 = ("Intel IA420", 3)   #: Target device is an Intel IA420 FPGA board.
+
+    def __init__(self, str_val, code):
+        self.__str_val = str_val
+        self.__code = code
+
+    def __str__(self):
+        return self.__str_val
+
+    @property
+    def code(self):
+        return self.__code
+
 
 class MeraTvmDeployment:
     def __init__(self, lib_path, params_path, lib_json_path):
@@ -83,9 +111,12 @@ class MeraTvmDeployment:
         self.params_path = params_path
         self.lib_json_path = lib_json_path
 
-    def get_runner(self, tvm_debug_mode : bool = False, tvm_debug_dump_path : str = None) -> MeraTvmModelRunner:
+    def get_runner(self, device_target : DeviceTarget = DeviceTarget.SAKURA_1,
+            tvm_debug_mode : bool = False, tvm_debug_dump_path : str = None) -> MeraTvmModelRunner:
         """Prepares the model for running with a given target
 
+        :param device_target: Selects the device run target where the IP deployment will be run. Only applicable for deployments
+            with target=IP. See `DeviceTarget` enum for a detailed list of possible values.
         :param tvm_debug_mode: Whether to create this runner with TVM debugger mode or not. This mode allows a breakdown of
             time spent on each node.
         :param tvm_debug_dump_path: When running with TVM debug mode enabled, allows to set up a directory where the debugging
@@ -93,6 +124,13 @@ class MeraTvmDeployment:
 
         :return: Runner object
         """
+        if isinstance(device_target, int):
+            _dt_code = device_target
+        else:
+            if not isinstance(device_target, DeviceTarget):
+                raise ValueError(f'device_target argument is not of type DeviceTarget. Got {type(device_target)}')
+            logger.debug(f'Creating TVM model runner for IP device {str(device_target)}')
+            _dt_code = device_target.code
         from tvm.runtime import load_module as __load_module, cpu as __cpu
         if tvm_debug_mode:
             from tvm.contrib.debugger.debug_executor import create as __create
@@ -102,6 +140,7 @@ class MeraTvmDeployment:
             from tvm.contrib.graph_executor import create as __create
             rt_mod = __create(self.lib_json_path.read_text(), __load_module(self.lib_path), __cpu())
         rt_mod.load_params(self.params_path.read_bytes())
+        rt_mod["mera_runtime_init_device"](_dt_code)
         logger.info(f'Created TVM model runner')
         return MeraTvmModelRunner(rt_mod)
 
