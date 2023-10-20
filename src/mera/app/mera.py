@@ -8,6 +8,8 @@ import os
 
 from pathlib import Path
 
+__mera_loc__ = Path(mera.__file__).resolve().parent
+
 def cmd(command, cwd = os.getcwd(), print_stdout = True, assert_retcode = False):
     stdout_str = ''
     with subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd) as p:
@@ -21,7 +23,6 @@ def cmd(command, cwd = os.getcwd(), print_stdout = True, assert_retcode = False)
     return p.returncode, stdout_str
 
 def find_bin_util(name):
-    __mera_loc__ = Path(mera.__file__).resolve().parent
     return str(__mera_loc__ / 'bin_utils' / name)
 
 def check_for_driver(driver_name, supported_drivers) -> str:
@@ -64,12 +65,16 @@ def main():
         print(f'Started DMA daemon with PID {pid}')
         return 0
     elif args.sakura1_start is not None:
-        # Check we have driver for that version available and we are running as root
-        driver_name = check_for_driver("pcie_sakura", ['5.15.0-69-generic', '5.15.0-71-generic'])
-        if not driver_name:
+        # Compile pcie kernel driver
+        __DRIVER_NAME = 'pcie_sakura.ko'
+        cmd(f'rm {__DRIVER_NAME}; make', cwd=__mera_loc__ / 'pcie_driver', print_stdout=False, assert_retcode=True)
+        # Check it is correctly compiled
+        __DRIVER_LOC = __mera_loc__ / 'pcie_driver' / __DRIVER_NAME
+        if not __DRIVER_LOC.exists():
+            print(f'ERROR: Failed to find SAKURA PCIe driver.')
             return -1
         # Load kernel driver
-        cmd(f'sudo insmod {find_bin_util(driver_name)} || true', print_stdout=False, assert_retcode=True)
+        cmd(f'sudo insmod {__DRIVER_LOC} || true', print_stdout=False, assert_retcode=True)
         cmd(f'sudo chmod 0666 /dev/sakura_*', assert_retcode=True)
         # Start dma daemon in the background
         pid = subprocess.Popen(['sudo', find_bin_util("ec_dma_daemon_proc")], close_fds=True).pid

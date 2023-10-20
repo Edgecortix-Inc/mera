@@ -1,0 +1,5 @@
+repository: 'https://edgecortix.box.com/shared/static'
+list:
+  - model:
+    name: 'DETR_600x400_ONNX.onnx'
+    code: iw5250rfi3pk3wyzicpt6br9glj38ouh

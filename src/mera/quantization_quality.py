@@ -140,7 +140,7 @@ class MeraQualityContainer:
         ref_data = self.out_metrics.ref_data[0]
         mera_data = self.out_metrics.qtz_data[0]
 
-        if len(ref_data) > 1 and not output_id:
+        if len(ref_data) > 1 and output_id is None:
             raise ValueError(f"Quality container has multiple outputs but 'output_id' parameter has not been specified.\n"
                 + f"Please set which of the {len(ref_data)} outputs you want to compute the histogram.")
         if not output_id:

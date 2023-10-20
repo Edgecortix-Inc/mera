@@ -204,7 +204,9 @@ class ModelQuantizer:
             raise ValueError(f'Unsupported quantization flow {self.flow}')
 
         from tvm.relay.mera import build_fp32 as __build_fp32
-        json, lib, params, mod = __build_fp32(mod, params, 'Quantizer', "x86")
+        from tvm.relay.mera import build_config as __build_config
+        with __build_config(target='Quantizer'):
+            json, lib, params, mod = __build_fp32(mod, params, 'Quantizer', "x86")
         self.mod = mod
         self.params = params
 
@@ -233,17 +235,8 @@ class ModelQuantizer:
             elif model_path.suffix == '.onnx':
                 if not model_path.exists():
                     raise ArgumentError(f'Could not find ONNX model file {model_path}')
-                import onnx
-                model = onnx.load(model_path)
-                # Resolve symbolic batch num to 1 for quantization
-                for _input in model.graph.input:
-                    dim_obj = _input.type.tensor_type.shape.dim
-                    if dim_obj:
-                        n_dim = dim_obj[0]
-                        if n_dim.dim_param != '' and not n_dim.dim_param.isnumeric():
-                            # Change symbolic batch with 1
-                            n_dim.dim_value = 1
-                return model, ModelQuantizerFlow.ONNX
+                from .mera_model import MeraModelOnnx
+                return MeraModelOnnx._resolve_model(model_path, 1), ModelQuantizerFlow.ONNX
             elif model_path.suffix == '.tflite':
                 if not model_path.exists():
                     raise ArgumentError(f'Could not find TFLite model file {model_path}')

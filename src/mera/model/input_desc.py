@@ -25,7 +25,7 @@ class InputDescription:
         if isinstance(input_type, np.dtype):
             input_type = str(input_type.name)
         if isinstance(input_type, str):
-            __valid_str_types = ['float32', 'double', 'float64', 'int32', 'int8', 'uint8']
+            __valid_str_types = ['float32', 'double', 'float64', 'int32', 'int8', 'uint8', 'int64']
             if input_type not in __valid_str_types:
                 raise ValueError(f"Input type {input_type} is not one of the valid strings: {__valid_str_types}")
             self.__input_type = input_type

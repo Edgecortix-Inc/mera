@@ -330,6 +330,18 @@ cd tutorials/multi_models
 python3 fused_resnet_mobilenet_simulator.py
 ```
 
+- **Vision Transformer deployment via Simulator** (`tutorials/transformers/detr/`):
+
+Shows how to deploy and run the DE:TR vision transformer model using BrainFloat-16 precision on Simulator.
+Can be executed with the following command:
+
+```
+cd tutorials/transformers/detr
+python downloader.py
+python deploy.py
+python demo_model.py
+```
+
 ## License
 
 This library is licensed under the Apache License Version 2.0.

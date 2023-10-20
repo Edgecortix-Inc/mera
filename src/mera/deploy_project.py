@@ -42,7 +42,9 @@ class Target(Enum):
     InterpreterHw = ("InterpreterHw", True, False)           #: Target sw interpretation of the model. Only valid for `x86`
     Simulator = ("Simulator", True, False)                   #: Target sw simulation of the IP model. Only valid for `x86`
     VerilatorSimulator = ("VerilatorSimulator", True, False) #: Target hw emulation of the IP model. Only valid for `x86`
-    InterpreterHwBf16 = ("InterpreterHwBf16", True, True)    #: Target sw interpretation of the model in BF16. Only valid for `x86`
+    InterpreterBf16 = ("InterpreterBf16", True, True)        #: Target sw interpretation of the model in BF16. Only valid for `x86`
+    InterpreterHwBf16 = ("InterpreterHwBf16", True, True)    #: Target IP sw interpretation of the model in BF16. Only valid for `x86`
+    SimulatorBf16 = ("SimulatorBf16", True, True)            #: Target sw simulation of the IP BF16 model. Only valid for `x86`
 
     def __init__(self, str_val, x86_only, uses_fp32_flow):
         self.str_val = str_val

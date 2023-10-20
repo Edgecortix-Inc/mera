@@ -42,6 +42,7 @@ class Platform(Enum):
     DNAA600L0001 = 'DNAA600L0001'
     DNAA600L0002 = 'DNAA600L0002'
     SAKURA_1     = 'DNAA600L0002'
+    SAKURA_2C    = 'DNAA600L0003'
 
 
     def __str__(self):

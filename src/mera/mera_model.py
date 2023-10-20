@@ -72,11 +72,51 @@ class MeraModelPytorch(MeraModel):
         logger.info(f"Loading PyTorch model {self.model_name} for TVM")
 
         from torch.jit import load as __torch_load
+        from torch import device as __device
         from tvm.relay.frontend import from_pytorch as __tvm_from_pytorch
 
-        model_raw = __torch_load(str(self.model_path))
+        model_raw = __torch_load(str(self.model_path), map_location=__device('cpu'))
         return __tvm_from_pytorch(model_raw, self.input_desc._for_tvm_pytorch(), layout=str(self.layout.value))
 
+
+class MeraModelOnnx(MeraModel):
+    """Specialization of MeraModel for a ONNX ML model."""
+
+    def __init__(self, prj, model_name, model_path, batch_num):
+        super().__init__(prj, model_name, model_path,
+            MeraModelOnnx.__get_input_desc(model_path, batch_num), False)
+        self.batch_num = batch_num
+
+    def _resolve_model(model_path, batch_num):
+        import onnx
+        model = onnx.load(str(model_path))
+        # Resolve symbolic batch num
+        for _input in model.graph.input:
+            dim_obj = _input.type.tensor_type.shape.dim
+            if dim_obj:
+                n_dim = dim_obj[0]
+                if n_dim.dim_param != '' and not n_dim.dim_param.isnumeric():
+                    # Change symbolic batch with 1
+                    n_dim.dim_value = int(batch_num)
+        return model
+
+    def __get_input_desc(model_path, batch_num):
+        model = MeraModelOnnx._resolve_model(model_path, batch_num)
+        from onnx.mapping import TENSOR_TYPE_TO_NP_TYPE
+        i_desc = []
+        for _input in model.graph.input:
+            dim_obj = _input.type.tensor_type.shape.dim
+            i_name = str(_input.name)
+            i_dim = tuple([int(x.dim_value) for x in dim_obj])
+            i_type = TENSOR_TYPE_TO_NP_TYPE[_input.type.tensor_type.elem_type]
+            i_desc.append(InputDescription(i_name, i_dim, i_type))
+        return i_desc
+
+    def _load_model_tvm(self):
+        logger.info(f"Loading ONNX model {self.model_name} for TVM")
+        model = MeraModelOnnx._resolve_model(self.model_path, self.batch_num)
+        from tvm.relay.frontend import from_onnx as __tvm_from_onnx
+        return __tvm_from_onnx(model)
 
 class MeraModelTflite(MeraModel):
     """Specialization of MeraModel for a TFLite ML model."""
@@ -251,6 +291,23 @@ class ModelLoader:
         """
         model_name = self.__check_model(model_path, model_name)
         return MeraModelPytorch(self.prj, model_name, model_path, input_desc, layout, use_prequantize_input)
+
+    def from_onnx(self, model_path : str, model_name : str = None, layout : Layout = Layout.NHWC,
+        batch_num : int = 1) -> MeraModelOnnx:
+        """Converts a ONNX model into a compatible model for MERA.
+        NOTE this loader is best optimised for float models using op_set=12
+
+        :param model_path: Path to the ONNX model file.
+        :param model_name: Display name of the model being deployed.
+            Will default to the stem name of the model file if not provided.
+        :param layout: Data layout of the model being loaded. Defaults to NHWC layout
+        :param batch_num: If the model contains symbolic batch numbers, loads it resolving its value to
+            the parameter provided. Defaults to 1.
+
+        :return: The input model compatible with MERA.
+        """
+        model_name = self.__check_model(model_path, model_name)
+        return MeraModelOnnx(self.prj, model_name, model_path, batch_num)
 
     def from_quantized_mera(self, model_path : str, model_name : str = None):
         """Converts a previously quantized MERA model into a compatible deployable model.

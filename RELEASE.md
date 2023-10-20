@@ -1,3 +1,22 @@
+# Highlights for MERA 1.5.0
+
+## Major features and improvements
+
+## Transformer model supported
+
+* MERA has now support for transformer models. The model zoo has been updated with the following models:
+  * nanoGPT language model
+  * MobileViT v1 Vision Transformer for classification
+  * DE:TR Vision Transformer for object detection
+
+## BrainFloat16 DNA support
+
+* Added half precision BrainFloat16 type support for compilation of float32 models and simulation.
+
+## ONNX model loading support
+
+* MERA can now load and deploy models with ONNX format.
+
 # Highlights for MERA 1.3.0
 
 ## Major features and improvements

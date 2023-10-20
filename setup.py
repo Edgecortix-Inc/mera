@@ -56,10 +56,12 @@ else: # x86
 _BINARIES = [
     'bin_utils/intel_get_board_id',
     'bin_utils/ifc_uio_5.15.0-56-generic.ko',
-    'bin_utils/pcie_sakura_5.15.0-69-generic.ko',
-    'bin_utils/pcie_sakura_5.15.0-71-generic.ko',
     'bin_utils/sakura_ddr_init',
     'bin_utils/ec_dma_daemon_proc',
+    'pcie_driver/usd_pcie.c',
+    'pcie_driver/usd_pcie.h',
+    'pcie_driver/pcieioctl.h',
+    'pcie_driver/Makefile'
 ]
 
 _CONSOLE_ENTRY_POINTS = [
