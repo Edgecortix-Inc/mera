@@ -71,7 +71,7 @@ class QuantizationQualityMetrics:
 
     @property
     def psnr_all(self) -> List[Tuple[float]]:
-        max = self.max
+        max = self.range # get full range of values, in case negative values exist
         mse = self.mean_squared_error
         psnr = []
         f = lambda max,mse : 10 * math.log10((max ** 2) / mse) if mse > 0 else 100.0

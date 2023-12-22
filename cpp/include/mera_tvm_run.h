@@ -50,6 +50,17 @@ std::string TargetToStr(const mera::Target &t);
 mera::Target StrToTarget(const std::string &t_str);
 std::ostream &operator<<(std::ostream &os, const Target &t);
 
+/**
+ * @brief List of possible MERA devices.
+ */
+enum class Device : int {
+  Sakura1 = 1,
+  Xilinx = 2,
+  Intel = 3
+};
+
+mera::Device StrToDev(const std::string &d_str);
+
 
 /**
  * @brief Base class that can communicate and run with a MERA deployment.
@@ -118,7 +129,7 @@ public:
    * @brief Prepares the model for running with a given target.
    * @return const MeraTvmModelRunner Model runner object
    */
-  std::unique_ptr<MeraModelRunner> GetRunner();
+  std::unique_ptr<MeraModelRunner> GetRunner(const mera::Device &dev);
 };
 
 

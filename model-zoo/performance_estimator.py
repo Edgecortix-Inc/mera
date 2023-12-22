@@ -1,8 +1,10 @@
+import os
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
+
 import mera
 from mera import Target, Platform
 
 import argparse
-import os
 import torch
 import tensorflow as tf
 import numpy as np
@@ -17,6 +19,17 @@ def get_total_latency_ms(run_result, latency_key_name = 'elapsed_latency'):
 def mera_run_sim_tflite(tflite_filename, platform, target, build_config, host_arch, output_dir):
     with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
         model = mera.ModelLoader(deployer).from_tflite(tflite_filename)
+        input_data = {}
+        for name, idesc in model.input_desc.all_inputs.items():
+            input_data[name] = np.random.rand(*idesc.input_shape)
+        deploy_ip = deployer.deploy(model, mera_platform=platform, target=target, build_config=build_config, host_arch=host_arch)
+        ip_runner = deploy_ip.get_runner().set_input(input_data).run()
+        return ip_runner
+
+
+def mera_run_sim_onnx(onnx_filename, platform, target, build_config, host_arch, output_dir):
+    with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
+        model = mera.ModelLoader(deployer).from_onnx(onnx_filename)
         input_data = {}
         for name, idesc in model.input_desc.all_inputs.items():
             input_data[name] = np.random.rand(*idesc.input_shape)
@@ -62,7 +75,7 @@ if __name__ == '__main__':
     sys.stderr = open('error.log', 'w')
 
     target = Target.Simulator
-    platform = Platform.DNAA600L0002
+    platform = Platform.SAKURA_1
     build_config = {
       "compiler_workers": 4,
       "scheduler_config": {
@@ -80,6 +93,11 @@ if __name__ == '__main__':
                 basename, extension = os.path.splitext(entry.name)
                 if extension == ".tflite":
                     runner = mera_run_sim_tflite(entry.path, platform, target, build_config, host_arch, basename)
+                    latencies[basename] = get_total_latency_ms(runner, 'sim_time_us')
+                elif extension == ".onnx":
+                    target = Target.SimulatorBf16
+                    platform = Platform.SAKURA_II
+                    runner = mera_run_sim_onnx(entry.path, platform, target, build_config, host_arch, basename)
                     latencies[basename] = get_total_latency_ms(runner, 'sim_time_us')
                 elif extension == ".mera":
                     runner = mera_run_sim_mera(entry.path, platform, target, build_config, host_arch, basename)

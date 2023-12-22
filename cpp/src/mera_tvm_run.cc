@@ -92,6 +92,15 @@ std::ostream &operator<<(std::ostream &os, const Target &t) {
   return os;
 }
 
+mera::Device StrToDev(const std::string &d_str) {
+#define STR2D(__name) if (d_str == #__name) { return mera::Device::__name; }
+  STR2D(Sakura1)
+  STR2D(Xilinx)
+  STR2D(Intel)
+#undef STR2D
+  throw std::runtime_error("Unknown Device value " + d_str);
+}
+
 class MeraTvmModelRunner : public MeraModelRunner {
   tvm::runtime::Module rt_mod_;
   tvm::runtime::DataType in_type_;
@@ -197,7 +206,7 @@ MeraTvmDeployment::MeraTvmDeployment(const path_t &root_path, const mera::Target
   lib_path_(root_path / "deploy.so"), params_path_(root_path / "deploy.params"), lib_json_path_(root_path / "deploy.json") {}
 
 
-std::unique_ptr<MeraModelRunner> MeraTvmDeployment::GetRunner() {
+std::unique_ptr<MeraModelRunner> MeraTvmDeployment::GetRunner(const mera::Device &dev) {
   const int device_type_ = kDLCPU;
   const int device_id_ = 0;
   std::ifstream json_in(lib_json_path_.c_str(), std::ios::in);
@@ -214,6 +223,9 @@ std::unique_ptr<MeraModelRunner> MeraTvmDeployment::GetRunner() {
   params_arr.data = params_data.data();
   params_arr.size = params_data.size();
   load_params_func(params_arr);
+
+  auto init_device = rt_mod.GetFunction("mera_runtime_init_device");
+  init_device(static_cast<int>(dev));
 
   return std::unique_ptr<MeraModelRunner>(new MeraTvmModelRunner(std::move(rt_mod)));
 }

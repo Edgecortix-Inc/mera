@@ -87,3 +87,12 @@ list:
   - model:
     name: 'SCI_1280x720_MERA.mera'
     code: pv92y5rf33en6qrm2zb727l5kc7ip598
+  - model:
+    name: 'NanoGPT-M_64_ONNX.onnx'
+    code: hko9ps3064bq9svzrpx0uo0w7p8aa5xf
+  - model:
+    name: 'DETR_600x400_ONNX.onnx'
+    code: iw5250rfi3pk3wyzicpt6br9glj38ouh
+  - model:
+    name: 'MobileViTV1_256x256_ONNX.onnx'
+    code: no3uxexvarzzsh5wqbbn095hfsirp2m1

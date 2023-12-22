@@ -13,7 +13,7 @@ def compile_mera(onnx_filename, out_dir, platform, target):
 
 
 def main(arg):
-    mera_platform = Platform.SAKURA_2C
+    mera_platform = Platform.SAKURA_II
     mera_target = Target.SimulatorBf16
     mera_path = compile_mera(arg.model_path, arg.out_dir, mera_platform, mera_target)
     print(f"SUCCESS, saved at {mera_path}")

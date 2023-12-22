@@ -14,8 +14,8 @@
 
 
 # Current version, modify this file for release using "bump_version.py"
-__version__ = "1.5.0"
-__release_date__ = "20/10/2023"
+__version__ = "1.6.0"
+__release_date__ = "21/12/2023"
 
 def get_mera_tvm_version() -> str:
     """Gets the version string for mera-tvm module

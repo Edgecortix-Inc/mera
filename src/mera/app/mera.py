@@ -77,7 +77,8 @@ def main():
         cmd(f'sudo insmod {__DRIVER_LOC} || true', print_stdout=False, assert_retcode=True)
         cmd(f'sudo chmod 0666 /dev/sakura_*', assert_retcode=True)
         # Start dma daemon in the background
-        pid = subprocess.Popen(['sudo', find_bin_util("ec_dma_daemon_proc")], close_fds=True).pid
+        dma_daemon_proc = subprocess.Popen(['sudo', find_bin_util("ec_dma_daemon_proc")], close_fds=True, stdin=subprocess.PIPE)
+        pid = dma_daemon_proc.pid
         print(f'Started DMA daemon with PID {pid}')
         # Launch ddr init executable (non sudo)
         freq_arg = f' -f {int(args.sakura1_start)}' if args.sakura1_start != '' else ''

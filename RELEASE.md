@@ -1,3 +1,14 @@
+# Highlights for MERA 1.6.0
+
+## Major features and improvements
+
+* Added support for Ubuntu 22.04 and drop support for Ubuntu 18.04
+* Improved support for BrainFloat16 precision for Sakura-II
+* Added three Transformer models to the latency estimation demo
+    * DE:TR, NanoGPT M and Mobile-ViT V1
+* General improvements and bug-fixes
+* Initial Performance Estimation support for SAKURA-II
+
 # Highlights for MERA 1.5.0
 
 ## Major features and improvements

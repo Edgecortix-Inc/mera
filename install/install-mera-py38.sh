@@ -17,7 +17,7 @@ EOF
 
 # Install MERA full version (change to runtime for a more light weight install with just IP run capabilities)
 pip install --upgrade pip
-pip install tqdm easydict wget notebook pandas matplotlib opencv-python gdown seaborn tensorflow_datasets
+pip install tqdm easydict wget notebook pandas matplotlib opencv-python gdown seaborn tensorflow_datasets onnx
 pip install mera[full]
 
 # Test installation

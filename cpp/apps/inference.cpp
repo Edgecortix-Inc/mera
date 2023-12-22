@@ -40,6 +40,7 @@ void Usage() {
   std::cout << "  -p/--project_dir: Path to directory where a MERA deployment has been built" << std::endl;
   std::cout << "  -i/--input_data:  Path to a binary file containing input data to run inference" << std::endl;
   std::cout << "  -t/--target:      mera::Target to load from the project, if needed" << std::endl;
+  std::cout << "  -d/--device:      Device(Sakura1/Xilinx/Intel) to run the deloyment" << std::endl;
   std::cout << "  -n/--n_runs:      Number of inference runs to repeat" << std::endl;
   std::cout << "  -o/--output_name: Name for generated output from inference. By default will be output_0.bin. Provide only basename." << std::endl;
   std::cout << "  -h/--help:        Displays this message." << std::endl;
@@ -48,6 +49,7 @@ void Usage() {
 int main(int argc, char **argv) {
   std::string proj_dir, in_data, out_path = "output";
   std::optional<mera::Target> target;
+  mera::Device device;
   int n_runs = 1;
   const struct option longopts[] = {
     {"help", no_argument, 0, 'h'},
@@ -55,6 +57,7 @@ int main(int argc, char **argv) {
     {"input_data", required_argument, 0, 'i'},
     {"output_name", required_argument, 0, 'o'},
     {"target", required_argument, 0, 't'},
+    {"device", required_argument, 0, 'd'},
     {"n_runs", required_argument, 0, 'n'},
     {0, 0, 0, 0}
   };
@@ -62,7 +65,7 @@ int main(int argc, char **argv) {
   int c;
   int opt_idx;
   while (true) {
-    c = getopt_long(argc, argv, "p:i:n:o:t:h", longopts, &opt_idx);
+    c = getopt_long(argc, argv, "p:i:n:o:t:d:h", longopts, &opt_idx);
     if (-1 == c) {
       break;
     }
@@ -81,6 +84,9 @@ int main(int argc, char **argv) {
         break;
       case 't':
         target = mera::StrToTarget(std::string(optarg));
+        break;
+      case 'd':
+        device = mera::StrToDev(std::string(optarg));
         break;
       case '?':
       case 'h':
@@ -107,7 +113,7 @@ int main(int argc, char **argv) {
 
   // Get and configure the runner
   std::cout << "Configuring MERA runner..." << std::endl;
-  auto runner = deploy.GetRunner();
+  auto runner = deploy.GetRunner(device);
   runner->SetInput(in_data);
 
   // Run inference N times
@@ -118,7 +124,7 @@ int main(int argc, char **argv) {
 
   // Grab and dump output
   for (int i = 0; i < runner->GetNumOutputs(); ++i) {
-    auto out_data = runner->GetOutputFloat();
+    auto out_data = runner->GetOutputFloat(i);
     std::cout << " > Output #" << i << " got " << out_data.size() << " elements." << std::endl;
     SaveToFile(out_data, out_path + "_" + std::to_string(i) + ".bin");
   }

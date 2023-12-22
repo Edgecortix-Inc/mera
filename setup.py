@@ -16,6 +16,17 @@ from setuptools import setup, find_packages
 import pathlib
 import re
 import sys
+from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
+
+class bdist_wheel(_bdist_wheel):
+    def finalize_options(self):
+        _bdist_wheel.finalize_options(self)
+        # Here we force the package to not be pure python, so we can get different pip packages depending on OS/python version.
+        self.root_is_pure = False
+
+cmdclass = {
+    "bdist_wheel": bdist_wheel,
+}
 
 here = pathlib.Path(__file__).parent.resolve()
 
@@ -102,4 +113,5 @@ setup(
         'Bug Tracker': 'https://github.com/Edgecortix-Inc/mera/issues',
         'Web Page': 'https://www.edgecortix.com',
     },
+    cmdclass=cmdclass,
 )

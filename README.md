@@ -6,16 +6,17 @@ This repository contains the source code for the frontend stack of EdgeCortix&re
 
 The current release of EdgeCortix&reg; MERA™ supports the following Dynamic Neural Accelerator architectures for FPGAs and ASICs:
 
-| Platform Identifiers | Platform | TOPS |
-|:---------------------:|:------:|:----:|
-|      DNAA800L0001     |  ASIC  |  78 <sub>1</sub>   |
-|      DNAA600L0002     |  ASIC  |  40  |
-|      DNAA400L0001     |  ASIC  | 26.2 |
-|      DNAF132S0001     |  FPGA  |  0.6 |
-|      DNAF232S0002     |  FPGA  |  1.2 |
-|      DNAF100L0003     |  FPGA  |  2.4 |
-|      DNAF632L0003     |  FPGA  |  3.6 |
-|      DNAF200L0003     |  FPGA  |  4.9 |
+| Platform Identifiers  | Platform | TOPS               | TFLOPS |
+|:---------------------:|:--------:|:------------------:|:------:|
+|          SAKURA_1     |  ASIC    |  40                | N/A    |
+|         SAKURA_II     |  ASIC    |  40                | 20     |
+|      DNAA800L0001     |  ASIC    |  78 <sub>1</sub>   | N/A    |
+|      DNAA400L0001     |  ASIC    | 26.2               | N/A    |
+|      DNAF132S0001     |  FPGA    |  0.6               | N/A    |
+|      DNAF232S0002     |  FPGA    |  1.2               | N/A    |
+|      DNAF100L0003     |  FPGA    |  2.4               | N/A    |
+|      DNAF632L0003     |  FPGA    |  3.6               | N/A    |
+|      DNAF200L0003     |  FPGA    |  4.9               | N/A    |
 
 *Note<sub>1</sub> Recommended frequency for this platform is 1.2GHz*
 
@@ -25,19 +26,19 @@ When using a platform identifier corresponding to the ASIC platforms, the recomm
 
 This document describes the steps needed to install MERA in your system.
 
-### Quick installation of MERA on Ubuntu 18.04 LTS
-
-To install MERA for Python 3.6 and all its dependencies source the provided script:
-
-```bash
-source install/install-mera-py36.sh
-```
 ### Quick installation of MERA on Ubuntu 20.04 LTS
 
 To install MERA for Python 3.8 and all its dependencies source the provided script:
 
 ```bash
 source install/install-mera-py38.sh
+```
+### Quick installation of MERA on Ubuntu 22.04 LTS
+
+To install MERA for Python 3.10 and all its dependencies source the provided script:
+
+```bash
+source install/install-mera-py310.sh
 ```
 
 ### Manual Installation
@@ -47,11 +48,11 @@ all the dependencies manually in your system.
 
 #### System Requirements
 
-For an *x86* architecture, you will need `Ubuntu 18.04` or `Ubuntu 20.04` as your OS, whereas for *aarch64* you will need `Ubuntu 20.04`.
+For an *x86* architecture, you will need `Ubuntu 20.04` or `Ubuntu 22.04` as your OS, whereas for *aarch64* you will need `Ubuntu 20.04`.
 The following software packages will also need to be installed:
 
 ```bash
-sudo apt update && sudo apt install python3.6 llvm-10 libgomp1 ocl-icd-libopencl1 software-properties-common \
+sudo apt update && sudo apt install llvm-10 libgomp1 ocl-icd-libopencl1 software-properties-common \
     libgoogle-glog0v5 libboost-graph-dev virtualenv wget build-essential
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt update
@@ -65,15 +66,14 @@ The MERA environment provides 3 different modes depending on the target usage:
 * `runtime`: Meant for running inference in HW accelerators using the DNA IP, requires extra system dependencies depending on the HW device.
 * `full`: Meant for users who want the functionality of both `host-only` and `runtime` models
 
-MERA pip packages are available for both Python3.6 and Python3.8 variants. Later python versions allow the usage of more up-to-date
-PyTorch and Tensorflow to use for deployments.
+MERA pip packages are available for both Python3.8 and Python3.10 variants.
 
 After choosing the desired mode, you can install MERA with the following command:
 
 ```bash
-# Create virtual environment with Python 3.6
+# Create virtual environment with Python 3.8
 MERA_VENV=mera-env
-virtualenv -p python3.6 $MERA_VENV
+virtualenv -p python3.8 $MERA_VENV
 source $MERA_VENV/bin/activate
 
 # Install MERA full version
@@ -145,7 +145,7 @@ with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
     model = ...
     deploy_ip = deployer.deploy(
         model,
-        mera_platform=Platform.DNAA600L0002,
+        mera_platform=Platform.SAKURA_1,
         target=Target.IP,
         host_arch="x86")
 
@@ -184,7 +184,7 @@ with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
     model = ...
     deploy_ip = deployer.deploy(
         model,
-        mera_platform=Platform.DNAA600L0002,
+        mera_platform=Platform.SAKURA_1,
         target=Target.IP,
         host_arch="x86",
         build_config=build_config)  # new option
@@ -233,13 +233,13 @@ In order to compile a model and do a cycle accurate simulation we should choose 
 
 ```python
 #
-# Compile for verilator simulator using the DNAA600L0002 ASIC architecture (40 TOPs)
+# Compile for verilator simulator using the SAKURA 1 ASIC architecture (40 TOPs)
 #
 with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
     model = ...
     deploy_ip = deployer.deploy(
         model,
-        mera_platform=Platform.DNAA600L0002,
+        mera_platform=Platform.SAKURA_1,
         target=Target.VerilatorSimulator,
         host_arch="x86")
 ```
@@ -250,7 +250,7 @@ In summary, the required configuration to perform a cycle accurate ASIC IP simul
 
 ```python
 #
-# Compile for verilator simulator using the DNAA600L0002 ASIC architecture (40 TOPs)
+# Compile for verilator simulator using the SAKURA_1 ASIC architecture (40 TOPs)
 # With high effort compilation mode (slow scheduling mode)
 #
 build_config = {
@@ -263,7 +263,7 @@ with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
     model = ...
     deploy_ip = deployer.deploy(
         model,
-        mera_platform=Platform.DNAA600L0002,
+        mera_platform=Platform.SAKURA_1,
         target=Target.VerilatorSimulator,
         host_arch="x86",
         build_config=build_config)
