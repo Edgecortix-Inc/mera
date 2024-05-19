@@ -9,16 +9,7 @@ The current release of EdgeCortix&reg; MERA™ supports the following Dynamic Ne
 | Platform Identifiers  | Platform | TOPS               | TFLOPS |
 |:---------------------:|:--------:|:------------------:|:------:|
 |          SAKURA_1     |  ASIC    |  40                | N/A    |
-|         SAKURA_II     |  ASIC    |  40                | 20     |
-|      DNAA800L0001     |  ASIC    |  78 <sub>1</sub>   | N/A    |
-|      DNAA400L0001     |  ASIC    | 26.2               | N/A    |
-|      DNAF132S0001     |  FPGA    |  0.6               | N/A    |
-|      DNAF232S0002     |  FPGA    |  1.2               | N/A    |
-|      DNAF100L0003     |  FPGA    |  2.4               | N/A    |
-|      DNAF632L0003     |  FPGA    |  3.6               | N/A    |
-|      DNAF200L0003     |  FPGA    |  4.9               | N/A    |
-
-*Note<sub>1</sub> Recommended frequency for this platform is 1.2GHz*
+|         SAKURA_II     |  ASIC    |  60                | 30     |
 
 When using a platform identifier corresponding to the ASIC platforms, the recommended minimum frequency setting is 800 MHz. In the case of FPGA platforms, the minimum recommended frequency is 300 MHz. In the above table, the TOPS corresponds to these minimum frequency specifications.
 
@@ -246,7 +237,7 @@ with mera.TVMDeployer(output_dir, overwrite=True) as deployer:
 
 Note that choosing this target is independent on the scheduler Slow or Fast modes, both can be used for this target but it is recommended to use the Slow (high effort) scheduling mode for the final compilation that will be used to benchmark a model.
 
-In summary, the required configuration to perform a cycle accurate ASIC IP simulation for the DNAA600L0002 architecture, with high effort scheduling mode, are the following changes:
+In summary, the required configuration to perform a cycle accurate ASIC IP simulation for the SAKURA_1 architecture, with high effort scheduling mode, are the following changes:
 
 ```python
 #

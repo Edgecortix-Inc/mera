@@ -24,24 +24,17 @@ Next we can start compiling and running models. The second script provided is na
 
 | Target                                   | Platform     | Host architecture |
 | ---------------------------------------- | ------------ | ----------------- |
-| EdgeCortix&reg; MERA&trade; IP Simulator | DNAA600L0002 | x86               |
+| EdgeCortix&reg; MERA&trade; IP Simulator | SAKURA_1     | x86               |
 
 **Target**: generates deployments ready to be run on FPGA, ASIC or simulators. Other targets are allowed as, for example, the `IP` target which will deploy the model for physical FPGA/ASIC hardware or the `VerilatorSimulator` target that deploys a model for a cycle accurate ASIC simulation. For this example we will use the `Simulator` target which is a C++ based IP simulator.
 
-**Platform**: specifies the hardware architecture. The current release of EdgeCortix&reg; MERA™ supports the following Dynamic Neural Accelerator architectures for FPGAs and ASICs:
+**Platform**: specifies the hardware architecture. The current release of EdgeCortix&reg; MERA™ supports the following Dynamic Neural Accelerator architectures for ASICs:
 
-| Platform Identifiers | Platform |      TOPS       |
-| :------------------: | :------: | :-------------: |
-|     DNAA800L0001     |   ASIC   | 78 <sub>1</sub> |
-|     DNAA600L0002     |   ASIC   |       40        |
-|     DNAA400L0001     |   ASIC   |      26.2       |
-|     DNAF132S0001     |   FPGA   |       0.6       |
-|     DNAF232S0002     |   FPGA   |       1.2       |
-|     DNAF100L0003     |   FPGA   |       2.4       |
-|     DNAF632L0003     |   FPGA   |       3.6       |
-|     DNAF200L0003     |   FPGA   |       4.9       |
+| Platform Identifiers  | Platform | TOPS               | TFLOPS |
+|:---------------------:|:--------:|:------------------:|:------:|
+|          SAKURA_1     |  ASIC    |  40                | N/A    |
+|         SAKURA_II     |  ASIC    |  60                | 30     |
 
-*Note<sub>1</sub> Recommended frequency for this platform is 1.2GHz*
 
 **Host architecture**: specifies the architecture of the machine's CPU where the  EdgeCortix&reg; MERA™ IP is installed as a co-processor. For our current example, as the **Target** is `Simulator` , the simulation will run on CPU.
 
